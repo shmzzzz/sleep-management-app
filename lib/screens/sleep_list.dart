@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sleep_management_app/screens/sleep_add.dart';
 
 class SleepListScreen extends StatelessWidget {
   const SleepListScreen({super.key});
@@ -30,7 +32,15 @@ class SleepListScreen extends StatelessWidget {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).push(
+            CupertinoPageRoute(
+              builder: (context) {
+                return const SleepAddScreen();
+              },
+            ),
+          );
+        },
         child: const Icon(Icons.add_circle_sharp),
       ),
     );
