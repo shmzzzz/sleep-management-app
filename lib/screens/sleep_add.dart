@@ -8,6 +8,16 @@ class SleepAddScreen extends StatefulWidget {
 }
 
 class _SleepAddScreenState extends State<SleepAddScreen> {
+  final _totalSleepHourController = TextEditingController();
+  final _sleepHourController = TextEditingController();
+  final _coreSleepHourController = TextEditingController();
+
+  void _clearText() {
+    _totalSleepHourController.text = '';
+    _sleepHourController.text = '';
+    _coreSleepHourController.text = '';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,6 +38,7 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
                 height: 32,
               ),
               TextFormField(
+                controller: _totalSleepHourController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   label: Text('睡眠時間(合計)'),
@@ -38,6 +49,7 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
                 height: 16,
               ),
               TextFormField(
+                controller: _sleepHourController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   label: Text('睡眠時間'),
@@ -48,6 +60,7 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
                 height: 16,
               ),
               TextFormField(
+                controller: _coreSleepHourController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   label: Text('深い睡眠'),
@@ -58,11 +71,18 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
                 height: 32,
               ),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  print(_totalSleepHourController.text);
+                  print(_sleepHourController.text);
+                  print(_coreSleepHourController.text);
+
+                  // 一覧画面への遷移
+                  Navigator.of(context).pop();
+                },
                 child: const Text('追加'),
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: _clearText,
                 child: const Text('クリア'),
               ),
             ],
