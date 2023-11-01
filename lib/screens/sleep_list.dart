@@ -2,13 +2,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sleep_management_app/screens/sleep_add.dart';
 
-class SleepListScreen extends StatelessWidget {
+class SleepListScreen extends StatefulWidget {
   const SleepListScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final List<String> list = ['6:23', '7:08', '5:24'];
+  State<SleepListScreen> createState() => _SleepListScreenState();
+}
 
+class _SleepListScreenState extends State<SleepListScreen> {
+  List<String> list = [];
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('睡眠時間一覧'),
@@ -32,14 +37,27 @@ class SleepListScreen extends StatelessWidget {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(
+        onPressed: () async {
+          final result = await Navigator.of(context).push(
             CupertinoPageRoute(
               builder: (context) {
                 return const SleepAddScreen();
               },
             ),
           );
+
+          if (result != null) {
+            // 入力値を取得し、リストに追加
+            final inputData = result;
+            final total = inputData['total'];
+            final sleep = inputData['sleep'];
+            final core = inputData['core'];
+
+            // 定義していたリストに追加する
+            setState(() {
+              list.add(total!);
+            });
+          }
         },
         child: const Icon(Icons.add_circle_sharp),
       ),
