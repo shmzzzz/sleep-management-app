@@ -62,7 +62,7 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
                     return '入力してください。';
-                  } else if (!RegExp(r'^[0-2][0-9]:[0-9]{2}$')
+                  } else if (!RegExp(r'^[0-2][0-9]:[0-5][0-9]$')
                       .hasMatch(value)) {
                     return '正しい時間形式(hh:mm)で入力してください。';
                   }
@@ -88,7 +88,7 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
                   if (value == null || value.trim().isEmpty) {
                     return '入力してください。';
                   } else if (!RegExp(
-                          r'^[0-2][0-9]:[0-9]{2}-[0-2][0-9]:[0-9]{2}$')
+                          r'^[0-2][0-9]:[0-9]{2}-[0-2][0-9]:[0-5][0-9]$')
                       .hasMatch(value)) {
                     return '正しい時間形式(hh:mm-hh:mm)で入力してください。';
                   }
@@ -112,8 +112,8 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return '深い睡眠を入力してください。';
-                  } else if (!RegExp(r'^[0-2][0-9]:[0-9]{2}$')
+                    return '入力してください。';
+                  } else if (!RegExp(r'^[0-2][0-9]:[0-5][0-9]$')
                       .hasMatch(value)) {
                     return '正しい時間形式(hh:mm)で入力してください。';
                   }
