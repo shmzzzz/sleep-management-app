@@ -8,6 +8,8 @@ class SleepAddScreen extends StatefulWidget {
 }
 
 class _SleepAddScreenState extends State<SleepAddScreen> {
+  final _formKey = GlobalKey<FormState>();
+
   final _totalSleepHourController = TextEditingController();
   final _sleepHourController = TextEditingController();
   final _coreSleepHourController = TextEditingController();
@@ -38,6 +40,7 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
       ),
       body: Form(
+        key: _formKey,
         child: Container(
           padding: const EdgeInsets.symmetric(
             horizontal: 8,
@@ -58,7 +61,10 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return 'Please enter some text';
+                    return '入力してください。';
+                  } else if (!RegExp(r'^[0-2][0-9]:[0-9]{2}$')
+                      .hasMatch(value)) {
+                    return '正しい時間形式(hh:mm)で入力してください。';
                   }
                   return null;
                 },
@@ -78,6 +84,16 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
                   label: Text('睡眠時間'),
                   prefixIcon: Icon(Icons.av_timer),
                 ),
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return '入力してください。';
+                  } else if (!RegExp(
+                          r'^[0-2][0-9]:[0-9]{2}-[0-2][0-9]:[0-9]{2}$')
+                      .hasMatch(value)) {
+                    return '正しい時間形式(hh:mm-hh:mm)で入力してください。';
+                  }
+                  return null;
+                },
                 onChanged: (value) {
                   setState(() {
                     inputSleep = value;
@@ -94,6 +110,15 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
                   label: Text('深い睡眠'),
                   prefixIcon: Icon(Icons.bedtime_outlined),
                 ),
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return '深い睡眠を入力してください。';
+                  } else if (!RegExp(r'^[0-2][0-9]:[0-9]{2}$')
+                      .hasMatch(value)) {
+                    return '正しい時間形式(hh:mm)で入力してください。';
+                  }
+                  return null;
+                },
                 onChanged: (value) {
                   setState(() {
                     inputCore = value;
@@ -105,14 +130,16 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  // 入力値を含むデータを一覧画面に渡す
-                  final inputData = {
-                    'total': inputTotal,
-                    'sleep': inputSleep,
-                    'core': inputCore,
-                  };
-                  // 一覧画面への遷移
-                  Navigator.of(context).pop(inputData);
+                  if (_formKey.currentState!.validate()) {
+                    // 入力値を含むデータを一覧画面に渡す
+                    final inputData = {
+                      'total': inputTotal,
+                      'sleep': inputSleep,
+                      'core': inputCore,
+                    };
+                    // 一覧画面への遷移
+                    Navigator.of(context).pop(inputData);
+                  }
                 },
                 child: const Text('追加'),
               ),
