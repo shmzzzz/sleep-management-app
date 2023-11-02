@@ -1,5 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:sleep_management_app/screens/sleep_add.dart';
 
 class SleepListScreen extends StatefulWidget {
@@ -10,7 +10,7 @@ class SleepListScreen extends StatefulWidget {
 }
 
 class _SleepListScreenState extends State<SleepListScreen> {
-  List<String> list = [];
+  List<Map<String, String>> list = [];
 
   @override
   Widget build(BuildContext context) {
@@ -22,15 +22,79 @@ class _SleepListScreenState extends State<SleepListScreen> {
       body: ListView.builder(
         itemCount: list.length,
         itemBuilder: (context, index) {
+          final item = list[index];
+          final total = item['total'];
+          final sleep = item['sleep'];
+          final core = item['core'];
+
           return Card(
+            elevation: 5,
             child: ListTile(
               leading: const Icon(
                 Icons.bed,
                 color: Colors.black,
               ),
-              title: Text(
-                list[index],
-                style: const TextStyle(color: Colors.black),
+              title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          Text(
+                            'Total',
+                            style: TextStyle(color: Colors.black),
+                          ),
+                          Text(
+                            'Sleep',
+                            style: TextStyle(color: Colors.black),
+                          ),
+                          Text(
+                            'Core',
+                            style: TextStyle(color: Colors.black),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(width: 6),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          Text(
+                            ':',
+                            style: TextStyle(color: Colors.black),
+                          ),
+                          Text(
+                            ':',
+                            style: TextStyle(color: Colors.black),
+                          ),
+                          Text(
+                            ':',
+                            style: TextStyle(color: Colors.black),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(width: 12),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '$total',
+                            style: const TextStyle(color: Colors.black),
+                          ),
+                          Text(
+                            '$sleep',
+                            style: const TextStyle(color: Colors.black),
+                          ),
+                          Text(
+                            '$core',
+                            style: const TextStyle(color: Colors.black),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           );
@@ -47,15 +111,10 @@ class _SleepListScreenState extends State<SleepListScreen> {
           );
 
           if (result != null) {
-            // 入力値を取得し、リストに追加
-            final inputData = result;
-            final total = inputData['total'];
-            final sleep = inputData['sleep'];
-            final core = inputData['core'];
-
             // 定義していたリストに追加する
+            final inputData = result as Map<String, String>;
             setState(() {
-              list.add(total!);
+              list.add(inputData);
             });
           }
         },
