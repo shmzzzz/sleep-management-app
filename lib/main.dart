@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sleep_management_app/screens/sleep_list.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,11 +19,7 @@ class MyApp extends StatelessWidget {
           seedColor: const Color.fromARGB(255, 14, 218, 208),
         ),
       ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('睡眠時間一覧'),
-        ),
-      ),
+      home: const SleepListScreen(),
     );
   }
 }
