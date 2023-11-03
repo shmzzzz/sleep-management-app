@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sleep_management_app/screens/sleep_list.dart';
+import 'package:sleep_management_app/screens/auth.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,7 +19,8 @@ class MyApp extends StatelessWidget {
           seedColor: const Color.fromARGB(255, 14, 218, 208),
         ),
       ),
-      home: const SleepListScreen(),
+      // home: const SleepListScreen(),
+      home: const AuthScreen(),
     );
   }
 }
