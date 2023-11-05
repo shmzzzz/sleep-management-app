@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -49,6 +50,14 @@ class _AuthScreenState extends State<AuthScreen> {
           email: _enteredEmail,
           password: _enteredPassword,
         );
+        // Firestoreへ登録する
+        await FirebaseFirestore.instance
+            .collection('users') // コレクションID(テーブル名的な)
+            .doc(userCredentails.user!.uid) // ドキュメントID << usersコレクション内のドキュメント(ユニークなものだったら何でも良い？)
+            .set({ // データを設定する
+          'username': 'to be done...',
+          'email': _enteredEmail,
+        });
       }
     } on FirebaseAuthException catch (error) {
       if (error.code == 'email-already-in-use') {
