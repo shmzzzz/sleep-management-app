@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:sleep_management_app/screens/auth.dart';
 import 'package:sleep_management_app/screens/sleep_list.dart';
+import 'package:sleep_management_app/screens/splash.dart';
 
 import 'firebase_options.dart';
 
@@ -34,6 +35,10 @@ class MyApp extends StatelessWidget {
         // https://firebase.google.com/docs/auth/flutter/start?hl=ja#authstatechanges
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            // ローディング中はSplash画面を表示する
+            return const SplashScreen();
+          }
           if (snapshot.hasData) {
             // snapshotがnullでない=ログイン済みの状態
             // 一覧画面へ遷移する
