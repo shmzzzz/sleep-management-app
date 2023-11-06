@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sleep_management_app/widgets/logout_button.dart';
 
 class SleepAddScreen extends StatefulWidget {
   const SleepAddScreen({super.key});
@@ -38,6 +39,9 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
       appBar: AppBar(
         title: const Text('睡眠時間追加'),
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+        actions: const [
+          LogoutButton(),
+        ],
       ),
       body: Form(
         key: _formKey,

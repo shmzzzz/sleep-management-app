@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "384801925963",
+    "project_id": "sleep-management-app",
+    "storage_bucket": "sleep-management-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:384801925963:android:f21e792637d61af79996ce",
+        "android_client_info": {
+          "package_name": "com.example.sleep_management_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJlNmtSu5LipbzDOT8nIvtqZedaijD-wI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

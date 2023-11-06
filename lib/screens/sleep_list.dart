@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:sleep_management_app/screens/sleep_add.dart';
+import 'package:sleep_management_app/widgets/logout_button.dart';
 
 class SleepListScreen extends StatefulWidget {
   const SleepListScreen({super.key});
@@ -18,6 +19,9 @@ class _SleepListScreenState extends State<SleepListScreen> {
       appBar: AppBar(
         title: const Text('睡眠時間一覧'),
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+        actions: const [
+          LogoutButton(),
+        ],
       ),
       body: ListView.builder(
         itemCount: list.length,
