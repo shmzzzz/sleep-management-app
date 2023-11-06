@@ -53,8 +53,10 @@ class _AuthScreenState extends State<AuthScreen> {
         // Firestoreへ登録する
         await FirebaseFirestore.instance
             .collection('users') // コレクションID(テーブル名的な)
-            .doc(userCredentails.user!.uid) // ドキュメントID << usersコレクション内のドキュメント(ユニークなものだったら何でも良い？)
-            .set({ // データを設定する
+            .doc(userCredentails.user!
+                .uid) // ドキュメントID << usersコレクション内のドキュメント(ユニークなものだったら何でも良い？)
+            .set({
+          // データを設定する
           'username': 'to be done...',
           'email': _enteredEmail,
         });
@@ -96,6 +98,17 @@ class _AuthScreenState extends State<AuthScreen> {
                   label: Text('メールアドレス'),
                   prefixIcon: Icon(Icons.mail_outline),
                 ),
+                keyboardType: TextInputType.emailAddress,
+                autocorrect: false,
+                textCapitalization: TextCapitalization.none,
+                validator: (value) {
+                  if (value == null ||
+                      value.trim().isEmpty ||
+                      !value.contains('@')) {
+                    return 'メールアドレスを入力してください。';
+                  }
+                  return null;
+                },
                 onSaved: (newValue) {
                   _enteredEmail = newValue!;
                 },
@@ -107,6 +120,13 @@ class _AuthScreenState extends State<AuthScreen> {
                   label: Text('パスワード'),
                   prefixIcon: Icon(Icons.key),
                 ),
+                obscureText: true,
+                validator: (value) {
+                  if (value == null || value.length < 6) {
+                    return 'パスワードを6文字以上で入力してください。';
+                  }
+                  return null;
+                },
                 onSaved: (newValue) {
                   _enteredPassword = newValue!;
                 },
