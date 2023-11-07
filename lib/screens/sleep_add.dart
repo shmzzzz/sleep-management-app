@@ -35,6 +35,7 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
         'total': inputTotal,
         'sleep': inputSleep,
         'core': inputCore,
+        'createdAt': Timestamp.now()
       });
       // 一覧画面への遷移
       Navigator.of(context).pop();
