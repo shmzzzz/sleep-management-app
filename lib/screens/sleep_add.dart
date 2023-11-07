@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sleep_management_app/widgets/logout_button.dart';
 
@@ -18,6 +19,27 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
   String inputTotal = '';
   String inputSleep = '';
   String inputCore = '';
+
+  void _submitData() {
+    if (_formKey.currentState!.validate()) {
+      //   // 入力値を含むデータを一覧画面に渡す
+      //   final inputData = {
+      //     'total': inputTotal,
+      //     'sleep': inputSleep,
+      //     'core': inputCore,
+      //   };
+      //   // 一覧画面への遷移
+      //   Navigator.of(context).pop(inputData);
+      // FireStoreにデータを保存する
+      FirebaseFirestore.instance.collection('sleep-data').add({
+        'total': inputTotal,
+        'sleep': inputSleep,
+        'core': inputCore,
+      });
+      // 一覧画面への遷移
+      Navigator.of(context).pop();
+    }
+  }
 
   void _clearText() {
     _totalSleepHourController.text = '';
@@ -133,18 +155,7 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
                 height: 32,
               ),
               ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    // 入力値を含むデータを一覧画面に渡す
-                    final inputData = {
-                      'total': inputTotal,
-                      'sleep': inputSleep,
-                      'core': inputCore,
-                    };
-                    // 一覧画面への遷移
-                    Navigator.of(context).pop(inputData);
-                  }
-                },
+                onPressed: _submitData,
                 child: const Text('追加'),
               ),
               TextButton(
