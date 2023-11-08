@@ -41,41 +41,62 @@ class _AuthScreenState extends State<AuthScreen> {
       });
       if (_isLogin) {
         // ログインしている場合の処理
-        final userCredentails = await _firebase.signInWithEmailAndPassword(
-          email: _enteredEmail,
-          password: _enteredPassword,
-        );
+        await _login();
       } else {
-        final userCredentails = await _firebase.createUserWithEmailAndPassword(
-          email: _enteredEmail,
-          password: _enteredPassword,
-        );
-        // Firestoreへ登録する
-        await FirebaseFirestore.instance
-            .collection('users') // コレクションID(テーブル名的な)
-            .doc(userCredentails.user!
-                .uid) // ドキュメントID << usersコレクション内のドキュメント(ユニークなものだったら何でも良い？)
-            .set({
-          // データを設定する
-          'username': 'to be done...',
-          'email': _enteredEmail,
-        });
+        await _createUserAndLogin();
       }
     } on FirebaseAuthException catch (error) {
+      // エラーハンドリングは以下を参考にすると良いかも
+      // https://qiita.com/edasan/items/ae0c04065c9d12b2e90e
       if (error.code == 'email-already-in-use') {
-        // ...
+        _showSnackBar('このメールアドレスはすでに使用されています。');
+      } else if (error.code == 'invalid-email') {
+        _showSnackBar('メールアドレスが有効ではありません。');
+      } else if (error.code == 'invalid_login_credentials') {
+        _showSnackBar('メールアドレスまたはパスワードが誤っています。');
+      } else if (error.code == 'too-many-requests') {
+        _showSnackBar('時間をおいてから実行してください。');
+      } else {
+        _showSnackBar(error.message ?? '認証に失敗しました。');
       }
-      ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(error.message ?? 'Authentication failed'),
-        ),
-      );
       // エラーが発生しているので認証処理は行っていない
       setState(() {
         _isAuthenticating = false;
       });
     }
+  }
+
+  Future<void> _login() async {
+    await _firebase.signInWithEmailAndPassword(
+      email: _enteredEmail,
+      password: _enteredPassword,
+    );
+  }
+
+  Future<void> _createUserAndLogin() async {
+    final userCredentails = await _firebase.createUserWithEmailAndPassword(
+      email: _enteredEmail,
+      password: _enteredPassword,
+    );
+    // Firestoreへ登録する
+    await FirebaseFirestore.instance
+        .collection('users') // コレクションID(テーブル名的な)
+        .doc(userCredentails
+            .user!.uid) // ドキュメントID << usersコレクション内のドキュメント(ユニークなものだったら何でも良い？)
+        .set({
+      // データを設定する
+      'username': 'to be done...',
+      'email': _enteredEmail,
+    });
+  }
+
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+      ),
+    );
   }
 
   @override
