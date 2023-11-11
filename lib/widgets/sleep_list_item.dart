@@ -1,15 +1,41 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class SleepListItem extends StatelessWidget {
-  const SleepListItem({super.key, required this.itemData});
+  const SleepListItem({
+    super.key,
+    required this.itemData,
+    required this.documentId,
+  });
 
   final Map<String, dynamic> itemData;
+  final String documentId;
 
   @override
   Widget build(BuildContext context) {
     final total = itemData['total'];
     final sleep = itemData['sleep'];
     final core = itemData['core'];
+
+    void showSnackBar(String message) {
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+        ),
+      );
+    }
+
+    void deleteData(String documentId) async {
+      try {
+        await FirebaseFirestore.instance
+            .collection('sleep-data')
+            .doc(documentId)
+            .delete();
+      } catch (error) {
+        showSnackBar(error.toString());
+      }
+    }
 
     return Card(
       elevation: 5,
@@ -79,6 +105,15 @@ class SleepListItem extends StatelessWidget {
               ],
             ),
           ],
+        ),
+        trailing: IconButton(
+          icon: const Icon(
+            Icons.delete,
+            color: Colors.black,
+          ),
+          onPressed: () {
+            deleteData(documentId);
+          },
         ),
       ),
     );
