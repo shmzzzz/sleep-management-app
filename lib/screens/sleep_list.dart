@@ -119,7 +119,11 @@ class _SleepListScreenState extends State<SleepListScreen> {
             itemCount: loadedData.length,
             itemBuilder: (context, index) {
               final item = loadedData[index].data();
-              return SleepListItem(itemData: item);
+              final documentId = loadedData[index].id;
+              return SleepListItem(
+                itemData: item,
+                documentId: documentId,
+              );
             },
           ),
           floatingActionButton: FloatingActionButton(
