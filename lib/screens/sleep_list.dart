@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sleep_management_app/screens/sleep_add.dart';
@@ -15,9 +16,15 @@ class SleepListScreen extends StatefulWidget {
 class _SleepListScreenState extends State<SleepListScreen> {
   @override
   Widget build(BuildContext context) {
+    // ユーザーのUIDを取得
+    String userUid = FirebaseAuth.instance.currentUser!.uid;
+    // ユーザごとにデータを保存しているパス
+    String userPath = 'users/$userUid/data';
+
     return StreamBuilder(
       stream: FirebaseFirestore.instance
-          .collection('sleep-data')
+          // ユーザーごとのパスに変更する
+          .collection(userPath)
           .orderBy(
             'createdAt',
             descending: true,

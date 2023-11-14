@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sleep_management_app/widgets/logout_button.dart';
 
@@ -20,25 +21,35 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
   String inputSleep = '';
   String inputCore = '';
 
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+      ),
+    );
+  }
+
   void _submitData() {
     if (_formKey.currentState!.validate()) {
-      //   // 入力値を含むデータを一覧画面に渡す
-      //   final inputData = {
-      //     'total': inputTotal,
-      //     'sleep': inputSleep,
-      //     'core': inputCore,
-      //   };
-      //   // 一覧画面への遷移
-      //   Navigator.of(context).pop(inputData);
-      // FireStoreにデータを保存する
-      FirebaseFirestore.instance.collection('sleep-data').add({
-        'total': inputTotal,
-        'sleep': inputSleep,
-        'core': inputCore,
-        'createdAt': Timestamp.now()
-      });
-      // 一覧画面への遷移
-      Navigator.of(context).pop();
+      try {
+        // ユーザーのUIDを取得
+        String userUid = FirebaseAuth.instance.currentUser!.uid;
+        // ユーザーごとにデータを保存するパスを構築
+        String userPath = 'users/$userUid/data';
+        // FireStoreにデータを保存する
+        // ユーザーごとに出し分けたいため、collectionに渡すpathを変更する
+        FirebaseFirestore.instance.collection(userPath).add({
+          'total': inputTotal,
+          'sleep': inputSleep,
+          'core': inputCore,
+          'createdAt': Timestamp.now()
+        });
+        // 一覧画面への遷移
+        Navigator.of(context).pop();
+      } catch (error) {
+        _showSnackBar(error.toString());
+      }
     }
   }
 
