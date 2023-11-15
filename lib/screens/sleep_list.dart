@@ -34,7 +34,7 @@ class _SleepListScreenState extends State<SleepListScreen> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Scaffold(
             appBar: AppBar(
-              title: const Text('睡眠時間一覧'),
+              title: Text('${FirebaseAuth.instance.currentUser!.email}'),
               backgroundColor: Theme.of(context).colorScheme.primaryContainer,
               actions: const [
                 LogoutButton(),
@@ -61,7 +61,7 @@ class _SleepListScreenState extends State<SleepListScreen> {
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
           return Scaffold(
             appBar: AppBar(
-              title: const Text('睡眠時間一覧'),
+              title: Text('${FirebaseAuth.instance.currentUser!.email}'),
               backgroundColor: Theme.of(context).colorScheme.primaryContainer,
               actions: const [
                 LogoutButton(),
@@ -88,7 +88,7 @@ class _SleepListScreenState extends State<SleepListScreen> {
         if (snapshot.hasError) {
           return Scaffold(
             appBar: AppBar(
-              title: const Text('睡眠時間一覧'),
+              title: Text('${FirebaseAuth.instance.currentUser!.email}'),
               backgroundColor: Theme.of(context).colorScheme.primaryContainer,
               actions: const [
                 LogoutButton(),
@@ -116,7 +116,7 @@ class _SleepListScreenState extends State<SleepListScreen> {
 
         return Scaffold(
           appBar: AppBar(
-            title: const Text('睡眠時間一覧'),
+            title: Text('${FirebaseAuth.instance.currentUser!.email}'),
             backgroundColor: Theme.of(context).colorScheme.primaryContainer,
             actions: const [
               LogoutButton(),
