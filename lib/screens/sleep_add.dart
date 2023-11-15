@@ -71,7 +71,7 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('睡眠時間追加'),
+        title: Text('${FirebaseAuth.instance.currentUser!.email}'),
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         actions: const [
           LogoutButton(),
