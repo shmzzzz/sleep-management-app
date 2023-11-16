@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sleep_management_app/screens/sleep_edit.dart';
 
 class SleepListItem extends StatelessWidget {
   const SleepListItem({
@@ -40,6 +42,18 @@ class SleepListItem extends StatelessWidget {
     return Card(
       elevation: 5,
       child: ListTile(
+        onTap: () {
+          Navigator.of(context).push(
+            CupertinoPageRoute(
+              builder: (context) {
+                return SleepEditScreen(
+                  initialData: itemData,
+                  documentId: documentId,
+                );
+              },
+            ),
+          );
+        },
         leading: const Icon(
           Icons.bed,
           color: Colors.black,
