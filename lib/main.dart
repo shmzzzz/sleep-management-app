@@ -23,12 +23,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Sleep Management App',
-      theme: ThemeData().copyWith(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color.fromARGB(255, 14, 218, 208),
-        ),
-      ),
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
       home: StreamBuilder(
         // 認証状態の変更を取得する
         // ①リスナーの登録直後 ②ユーザーがログインした時 ③現在のユーザーがログアウトした時

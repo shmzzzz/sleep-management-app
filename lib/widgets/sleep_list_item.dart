@@ -54,10 +54,7 @@ class SleepListItem extends StatelessWidget {
             ),
           );
         },
-        leading: const Icon(
-          Icons.bed,
-          color: Colors.black,
-        ),
+        leading: const Icon(Icons.bed),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -66,54 +63,27 @@ class SleepListItem extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: const [
-                    Text(
-                      'Total',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                    Text(
-                      'Sleep',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                    Text(
-                      'Core',
-                      style: TextStyle(color: Colors.black),
-                    ),
+                    Text('Total'),
+                    Text('Sleep'),
+                    Text('Core'),
                   ],
                 ),
                 const SizedBox(width: 6),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: const [
-                    Text(
-                      ':',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                    Text(
-                      ':',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                    Text(
-                      ':',
-                      style: TextStyle(color: Colors.black),
-                    ),
+                    Text(':'),
+                    Text(':'),
+                    Text(':'),
                   ],
                 ),
                 const SizedBox(width: 12),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      '$total',
-                      style: const TextStyle(color: Colors.black),
-                    ),
-                    Text(
-                      '$sleep',
-                      style: const TextStyle(color: Colors.black),
-                    ),
-                    Text(
-                      '$core',
-                      style: const TextStyle(color: Colors.black),
-                    ),
+                    Text('$total'),
+                    Text('$sleep'),
+                    Text('$core'),
                   ],
                 ),
               ],
@@ -121,10 +91,7 @@ class SleepListItem extends StatelessWidget {
           ],
         ),
         trailing: IconButton(
-          icon: const Icon(
-            Icons.delete,
-            color: Colors.black,
-          ),
+          icon: const Icon(Icons.delete),
           onPressed: () {
             deleteData(documentId);
           },
