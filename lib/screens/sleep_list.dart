@@ -35,7 +35,6 @@ class _SleepListScreenState extends State<SleepListScreen> {
           return Scaffold(
             appBar: AppBar(
               title: Text('${FirebaseAuth.instance.currentUser!.email}'),
-              backgroundColor: Theme.of(context).colorScheme.primaryContainer,
               actions: const [
                 LogoutButton(),
               ],
@@ -62,7 +61,6 @@ class _SleepListScreenState extends State<SleepListScreen> {
           return Scaffold(
             appBar: AppBar(
               title: Text('${FirebaseAuth.instance.currentUser!.email}'),
-              backgroundColor: Theme.of(context).colorScheme.primaryContainer,
               actions: const [
                 LogoutButton(),
               ],
@@ -89,7 +87,6 @@ class _SleepListScreenState extends State<SleepListScreen> {
           return Scaffold(
             appBar: AppBar(
               title: Text('${FirebaseAuth.instance.currentUser!.email}'),
-              backgroundColor: Theme.of(context).colorScheme.primaryContainer,
               actions: const [
                 LogoutButton(),
               ],
@@ -117,7 +114,6 @@ class _SleepListScreenState extends State<SleepListScreen> {
         return Scaffold(
           appBar: AppBar(
             title: Text('${FirebaseAuth.instance.currentUser!.email}'),
-            backgroundColor: Theme.of(context).colorScheme.primaryContainer,
             actions: const [
               LogoutButton(),
             ],
