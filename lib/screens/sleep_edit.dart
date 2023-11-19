@@ -3,23 +3,42 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sleep_management_app/widgets/logout_button.dart';
 
-class SleepAddScreen extends StatefulWidget {
-  const SleepAddScreen({super.key});
+class SleepEditScreen extends StatefulWidget {
+  const SleepEditScreen({
+    super.key,
+    required this.initialData,
+    required this.documentId,
+  });
+
+  final Map<String, dynamic> initialData;
+  final String documentId;
 
   @override
-  State<SleepAddScreen> createState() => _SleepAddScreenState();
+  State<SleepEditScreen> createState() => _SleepEditScreenState();
 }
 
-class _SleepAddScreenState extends State<SleepAddScreen> {
+class _SleepEditScreenState extends State<SleepEditScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  final _totalSleepHourController = TextEditingController();
-  final _sleepHourController = TextEditingController();
-  final _coreSleepHourController = TextEditingController();
+  late TextEditingController totalController;
+  late TextEditingController sleepController;
+  late TextEditingController coreController;
 
-  String inputTotal = '';
-  String inputSleep = '';
-  String inputCore = '';
+  @override
+  void initState() {
+    super.initState();
+    totalController = TextEditingController(text: widget.initialData['total']);
+    sleepController = TextEditingController(text: widget.initialData['sleep']);
+    coreController = TextEditingController(text: widget.initialData['core']);
+  }
+
+  @override
+  void dispose() {
+    totalController.dispose();
+    sleepController.dispose();
+    coreController.dispose();
+    super.dispose();
+  }
 
   void _showSnackBar(String message) {
     ScaffoldMessenger.of(context).clearSnackBars();
@@ -39,11 +58,14 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
         String userPath = 'users/$userUid/data';
         // FireStoreにデータを保存する
         // ユーザーごとに出し分けたいため、collectionに渡すpathを変更する
-        FirebaseFirestore.instance.collection(userPath).add({
-          'total': inputTotal,
-          'sleep': inputSleep,
-          'core': inputCore,
-          'createdAt': Timestamp.now()
+        FirebaseFirestore.instance
+            .collection(userPath)
+            .doc(widget.documentId)
+            // 更新なのでupdate
+            .update({
+          'total': totalController.text,
+          'sleep': sleepController.text,
+          'core': coreController.text,
         });
         // 一覧画面への遷移
         Navigator.of(context).pop();
@@ -51,20 +73,6 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
         _showSnackBar(error.toString());
       }
     }
-  }
-
-  void _clearText() {
-    _totalSleepHourController.text = '';
-    _sleepHourController.text = '';
-    _coreSleepHourController.text = '';
-  }
-
-  @override
-  void dispose() {
-    _totalSleepHourController.dispose();
-    _sleepHourController.dispose();
-    _coreSleepHourController.dispose();
-    super.dispose();
   }
 
   @override
@@ -90,7 +98,7 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
                 height: 32,
               ),
               TextFormField(
-                controller: _totalSleepHourController,
+                controller: totalController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   label: Text('睡眠時間(合計)'),
@@ -105,17 +113,12 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
                   }
                   return null;
                 },
-                onChanged: (value) {
-                  setState(() {
-                    inputTotal = value;
-                  });
-                },
               ),
               const SizedBox(
                 height: 16,
               ),
               TextFormField(
-                controller: _sleepHourController,
+                controller: sleepController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   label: Text('睡眠時間'),
@@ -131,17 +134,12 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
                   }
                   return null;
                 },
-                onChanged: (value) {
-                  setState(() {
-                    inputSleep = value;
-                  });
-                },
               ),
               const SizedBox(
                 height: 16,
               ),
               TextFormField(
-                controller: _coreSleepHourController,
+                controller: coreController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   label: Text('深い睡眠'),
@@ -156,22 +154,13 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
                   }
                   return null;
                 },
-                onChanged: (value) {
-                  setState(() {
-                    inputCore = value;
-                  });
-                },
               ),
               const SizedBox(
                 height: 32,
               ),
               ElevatedButton(
                 onPressed: _submitData,
-                child: const Text('追加'),
-              ),
-              TextButton(
-                onPressed: _clearText,
-                child: const Text('クリア'),
+                child: const Text('更新'),
               ),
             ],
           ),
