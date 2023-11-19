@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sleep_management_app/screens/sleep_add.dart';
+import 'package:sleep_management_app/widgets/drawer_list.dart';
 import 'package:sleep_management_app/widgets/logout_button.dart';
 import 'package:sleep_management_app/widgets/sleep_list_item.dart';
 
@@ -65,6 +66,7 @@ class _SleepListScreenState extends State<SleepListScreen> {
                 LogoutButton(),
               ],
             ),
+            drawer: const DrawerList(),
             body: const Center(
               child: Text('データがありません。'),
             ),
@@ -118,6 +120,7 @@ class _SleepListScreenState extends State<SleepListScreen> {
               LogoutButton(),
             ],
           ),
+          drawer: const DrawerList(),
           body: ListView.builder(
             itemCount: loadedData.length,
             itemBuilder: (context, index) {
