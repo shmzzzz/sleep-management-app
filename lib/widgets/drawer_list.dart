@@ -10,7 +10,9 @@ class DrawerList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Drawer(
       child: ListView(
+        // ドロワーは(現状)スクロール不要なので無効にする
         physics: const NeverScrollableScrollPhysics(),
+        // これを設定することでヘッダー上部の謎の余白がなくなる
         padding: EdgeInsets.zero,
         children: [
           SizedBox(
