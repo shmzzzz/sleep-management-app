@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sleep_management_app/screens/sleep_edit.dart';
@@ -30,8 +31,12 @@ class SleepListItem extends StatelessWidget {
 
     void deleteData(String documentId) async {
       try {
+        // ユーザーのUIDを取得
+        String userUid = FirebaseAuth.instance.currentUser!.uid;
+        // ユーザーごとにデータを保存するパスを構築
+        String userPath = 'users/$userUid/data';
         await FirebaseFirestore.instance
-            .collection('sleep-data')
+            .collection(userPath)
             .doc(documentId)
             .delete();
       } catch (error) {
