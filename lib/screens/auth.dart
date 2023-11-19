@@ -104,7 +104,6 @@ class _AuthScreenState extends State<AuthScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Welcome!'),
-        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 32),
@@ -159,10 +158,6 @@ class _AuthScreenState extends State<AuthScreen> {
                 // 認証処理中でない場合はボタンを表示させる
                 ElevatedButton(
                   onPressed: _submit,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        Theme.of(context).colorScheme.primaryContainer,
-                  ),
                   child: Text(_isLogin ? 'ログイン' : '新規作成'),
                 ),
               // 認証処理中でない場合はボタンを表示させる
