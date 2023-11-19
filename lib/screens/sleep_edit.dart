@@ -23,6 +23,7 @@ class _SleepEditScreenState extends State<SleepEditScreen> {
   late TextEditingController totalController;
   late TextEditingController sleepController;
   late TextEditingController coreController;
+  late TextEditingController goalController;
 
   @override
   void initState() {
@@ -30,6 +31,7 @@ class _SleepEditScreenState extends State<SleepEditScreen> {
     totalController = TextEditingController(text: widget.initialData['total']);
     sleepController = TextEditingController(text: widget.initialData['sleep']);
     coreController = TextEditingController(text: widget.initialData['core']);
+    goalController = TextEditingController(text: widget.initialData['goal']);
   }
 
   @override
@@ -37,6 +39,7 @@ class _SleepEditScreenState extends State<SleepEditScreen> {
     totalController.dispose();
     sleepController.dispose();
     coreController.dispose();
+    goalController.dispose();
     super.dispose();
   }
 
@@ -66,6 +69,7 @@ class _SleepEditScreenState extends State<SleepEditScreen> {
           'total': totalController.text,
           'sleep': sleepController.text,
           'core': coreController.text,
+          'goal': goalController.text,
         });
         // 一覧画面への遷移
         Navigator.of(context).pop();
@@ -143,6 +147,26 @@ class _SleepEditScreenState extends State<SleepEditScreen> {
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   label: Text('深い睡眠'),
+                  prefixIcon: Icon(Icons.bedtime_outlined),
+                ),
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return '入力してください。';
+                  } else if (!RegExp(r'^[0-2][0-9]:[0-5][0-9]$')
+                      .hasMatch(value)) {
+                    return '正しい時間形式(hh:mm)で入力してください。';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              TextFormField(
+                controller: goalController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  label: Text('目標睡眠時間'),
                   prefixIcon: Icon(Icons.bedtime_outlined),
                 ),
                 validator: (value) {

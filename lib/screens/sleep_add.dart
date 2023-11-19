@@ -16,10 +16,12 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
   final _totalSleepHourController = TextEditingController();
   final _sleepHourController = TextEditingController();
   final _coreSleepHourController = TextEditingController();
+  final _goalSleepHourController = TextEditingController();
 
   String inputTotal = '';
   String inputSleep = '';
   String inputCore = '';
+  String inputGoal = '';
 
   void _showSnackBar(String message) {
     ScaffoldMessenger.of(context).clearSnackBars();
@@ -43,6 +45,7 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
           'total': inputTotal,
           'sleep': inputSleep,
           'core': inputCore,
+          'goal': inputGoal,
           'createdAt': Timestamp.now()
         });
         // 一覧画面への遷移
@@ -57,6 +60,7 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
     _totalSleepHourController.text = '';
     _sleepHourController.text = '';
     _coreSleepHourController.text = '';
+    _goalSleepHourController.text = '';
   }
 
   @override
@@ -64,6 +68,7 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
     _totalSleepHourController.dispose();
     _sleepHourController.dispose();
     _coreSleepHourController.dispose();
+    _goalSleepHourController.dispose();
     super.dispose();
   }
 
@@ -159,6 +164,31 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
                 onChanged: (value) {
                   setState(() {
                     inputCore = value;
+                  });
+                },
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              TextFormField(
+                controller: _goalSleepHourController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  label: Text('目標睡眠時間'),
+                  prefixIcon: Icon(Icons.checklist_outlined),
+                ),
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return '入力してください。';
+                  } else if (!RegExp(r'^[0-2][0-9]:[0-5][0-9]$')
+                      .hasMatch(value)) {
+                    return '正しい時間形式(hh:mm)で入力してください。';
+                  }
+                  return null;
+                },
+                onChanged: (value) {
+                  setState(() {
+                    inputGoal = value;
                   });
                 },
               ),

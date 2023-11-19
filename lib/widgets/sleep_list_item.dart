@@ -19,6 +19,7 @@ class SleepListItem extends StatelessWidget {
     final total = itemData['total'];
     final sleep = itemData['sleep'];
     final core = itemData['core'];
+    final goal = itemData['goal'];
 
     void showSnackBar(String message) {
       ScaffoldMessenger.of(context).clearSnackBars();
