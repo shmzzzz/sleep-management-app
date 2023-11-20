@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sleep_management_app/widgets/logout_button.dart';
 
 class SleepAddScreen extends StatefulWidget {
@@ -16,10 +17,12 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
   final _totalSleepHourController = TextEditingController();
   final _sleepHourController = TextEditingController();
   final _coreSleepHourController = TextEditingController();
+  final _goalSleepHourController = TextEditingController();
 
   String inputTotal = '';
   String inputSleep = '';
   String inputCore = '';
+  String inputGoal = '';
 
   void _showSnackBar(String message) {
     ScaffoldMessenger.of(context).clearSnackBars();
@@ -43,10 +46,17 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
           'total': inputTotal,
           'sleep': inputSleep,
           'core': inputCore,
+          'goal': inputGoal,
           'createdAt': Timestamp.now()
         });
+        // DateTimeに変換する
+        DateTime totalDateTime = DateFormat('HH:mm').parse(inputTotal);
+        DateTime goalDateTime = DateFormat('HH:mm').parse(inputGoal);
+        // 目標との比較
+        bool isAchieved = totalDateTime.isAfter(goalDateTime) ||
+            totalDateTime.isAtSameMomentAs(goalDateTime);
         // 一覧画面への遷移
-        Navigator.of(context).pop();
+        Navigator.of(context).pop(isAchieved);
       } catch (error) {
         _showSnackBar(error.toString());
       }
@@ -57,6 +67,7 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
     _totalSleepHourController.text = '';
     _sleepHourController.text = '';
     _coreSleepHourController.text = '';
+    _goalSleepHourController.text = '';
   }
 
   @override
@@ -64,6 +75,7 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
     _totalSleepHourController.dispose();
     _sleepHourController.dispose();
     _coreSleepHourController.dispose();
+    _goalSleepHourController.dispose();
     super.dispose();
   }
 
@@ -159,6 +171,31 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
                 onChanged: (value) {
                   setState(() {
                     inputCore = value;
+                  });
+                },
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              TextFormField(
+                controller: _goalSleepHourController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  label: Text('目標睡眠時間'),
+                  prefixIcon: Icon(Icons.checklist_outlined),
+                ),
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return '入力してください。';
+                  } else if (!RegExp(r'^[0-2][0-9]:[0-5][0-9]$')
+                      .hasMatch(value)) {
+                    return '正しい時間形式(hh:mm)で入力してください。';
+                  }
+                  return null;
+                },
+                onChanged: (value) {
+                  setState(() {
+                    inputGoal = value;
                   });
                 },
               ),
