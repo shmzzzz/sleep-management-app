@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sleep_management_app/widgets/logout_button.dart';
 
 class SleepAddScreen extends StatefulWidget {
@@ -48,8 +49,14 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
           'goal': inputGoal,
           'createdAt': Timestamp.now()
         });
+        // DateTimeに変換する
+        DateTime totalDateTime = DateFormat('HH:mm').parse(inputTotal);
+        DateTime goalDateTime = DateFormat('HH:mm').parse(inputGoal);
+        // 目標との比較
+        bool isAchieved = totalDateTime.isAfter(goalDateTime) ||
+            totalDateTime.isAtSameMomentAs(goalDateTime);
         // 一覧画面への遷移
-        Navigator.of(context).pop();
+        Navigator.of(context).pop(isAchieved);
       } catch (error) {
         _showSnackBar(error.toString());
       }

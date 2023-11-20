@@ -20,6 +20,19 @@ class SleepListItem extends StatefulWidget {
 }
 
 class _SleepListItemState extends State<SleepListItem> {
+  bool isAchieved = false;
+
+  void updateAchievment() {
+    DateTime totalDateTime =
+        DateFormat('HH:mm').parse(widget.itemData['total']);
+    DateTime goalDateTime = DateFormat('HH:mm').parse(widget.itemData['goal']);
+    // 目標との比較
+    setState(() {
+      isAchieved = totalDateTime.isAfter(goalDateTime) ||
+          totalDateTime.isAtSameMomentAs(goalDateTime);
+    });
+  }
+
   void showSnackBar(String message) {
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
@@ -45,24 +58,22 @@ class _SleepListItemState extends State<SleepListItem> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    updateAchievment();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final total = widget.itemData['total'];
     final sleep = widget.itemData['sleep'];
     final core = widget.itemData['core'];
-    final goal = widget.itemData['goal'];
-
-    // DateTimeに変換する
-    DateTime totalDateTime = DateFormat('HH:mm').parse(total);
-    DateTime goalDateTime = DateFormat('HH:mm').parse(goal);
-    // 目標との比較
-    bool isAchieved = totalDateTime.isAfter(goalDateTime) ||
-        totalDateTime.isAtSameMomentAs(goalDateTime);
 
     return Card(
       elevation: 5,
       child: ListTile(
-        onTap: () {
-          Navigator.of(context).push(
+        onTap: () async {
+          var result = await Navigator.of(context).push(
             CupertinoPageRoute(
               builder: (context) {
                 return SleepEditScreen(
@@ -72,8 +83,15 @@ class _SleepListItemState extends State<SleepListItem> {
               },
             ),
           );
+
+          // データが更新された場合はisAchievedが変わる可能性がある
+          if (result != null) {
+            isAchieved = result;
+          }
         },
-        leading: const Icon(Icons.bed),
+        leading: isAchieved
+            ? const Icon(Icons.check_circle_outline_outlined)
+            : const Icon(Icons.bed),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

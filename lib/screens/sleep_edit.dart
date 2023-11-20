@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sleep_management_app/widgets/logout_button.dart';
 
 class SleepEditScreen extends StatefulWidget {
@@ -71,8 +72,15 @@ class _SleepEditScreenState extends State<SleepEditScreen> {
           'core': coreController.text,
           'goal': goalController.text,
         });
+        // DateTimeに変換する
+        DateTime totalDateTime =
+            DateFormat('HH:mm').parse(totalController.text);
+        DateTime goalDateTime = DateFormat('HH:mm').parse(goalController.text);
+        // 目標との比較
+        bool isAchieved = totalDateTime.isAfter(goalDateTime) ||
+            totalDateTime.isAtSameMomentAs(goalDateTime);
         // 一覧画面への遷移
-        Navigator.of(context).pop();
+        Navigator.of(context).pop(isAchieved);
       } catch (error) {
         _showSnackBar(error.toString());
       }
