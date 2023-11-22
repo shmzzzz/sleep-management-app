@@ -32,6 +32,7 @@ class _SleepListScreenState extends State<SleepListScreen> {
           )
           .snapshots(),
       builder: (context, snapshot) {
+        // 通信中はローディングスピナーを表示する
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Scaffold(
             appBar: AppBar(
@@ -58,6 +59,7 @@ class _SleepListScreenState extends State<SleepListScreen> {
           );
         }
 
+        // データがない場合
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
           return Scaffold(
             appBar: AppBar(
@@ -85,6 +87,7 @@ class _SleepListScreenState extends State<SleepListScreen> {
           );
         }
 
+        // エラーが発生した場合
         if (snapshot.hasError) {
           return Scaffold(
             appBar: AppBar(
@@ -111,6 +114,7 @@ class _SleepListScreenState extends State<SleepListScreen> {
           );
         }
 
+        // データが存在するので取得する
         final loadedData = snapshot.data!.docs;
 
         return Scaffold(

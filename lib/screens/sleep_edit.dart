@@ -29,6 +29,7 @@ class _SleepEditScreenState extends State<SleepEditScreen> {
   @override
   void initState() {
     super.initState();
+    // initialDataが外側から受け取った変数なので、widgetを経由して取得する
     totalController = TextEditingController(text: widget.initialData['total']);
     sleepController = TextEditingController(text: widget.initialData['sleep']);
     coreController = TextEditingController(text: widget.initialData['core']);
@@ -64,6 +65,7 @@ class _SleepEditScreenState extends State<SleepEditScreen> {
         // ユーザーごとに出し分けたいため、collectionに渡すpathを変更する
         FirebaseFirestore.instance
             .collection(userPath)
+            // documentIdが外側から受け取った変数なので、widgetを経由して取得する
             .doc(widget.documentId)
             // 更新なのでupdate
             .update({

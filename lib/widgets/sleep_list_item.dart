@@ -27,6 +27,7 @@ class _SleepListItemState extends State<SleepListItem> {
         DateFormat('HH:mm').parse(widget.itemData['total']);
     DateTime goalDateTime = DateFormat('HH:mm').parse(widget.itemData['goal']);
     // 目標との比較
+    // アイコンを更新したいのでsetState内で比較する
     setState(() {
       isAchieved = totalDateTime.isAfter(goalDateTime) ||
           totalDateTime.isAtSameMomentAs(goalDateTime);
