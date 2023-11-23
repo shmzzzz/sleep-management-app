@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sleep_management_app/widgets/logout_button.dart';
+import 'package:sleep_management_app/widgets/appbar_component_widget.dart';
 
 class SleepAddScreen extends StatefulWidget {
   const SleepAddScreen({super.key});
@@ -82,11 +82,8 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('${FirebaseAuth.instance.currentUser!.email}'),
-        actions: const [
-          LogoutButton(),
-        ],
+      appBar: AppBarComponentWidget(
+        title: FirebaseAuth.instance.currentUser!.email!,
       ),
       body: Form(
         key: _formKey,
