@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sleep_management_app/widgets/appbar_component_widget.dart';
+import 'package:sleep_management_app/widgets/core_sleep_form_text_field.dart';
 import 'package:sleep_management_app/widgets/sleep_hours_form_text_field.dart';
 import 'package:sleep_management_app/widgets/total_sleep_form_text_field.dart';
 
@@ -118,23 +119,7 @@ class _SleepEditScreenState extends State<SleepEditScreen> {
               const SizedBox(
                 height: 16,
               ),
-              TextFormField(
-                controller: coreController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  label: Text('深い睡眠'),
-                  prefixIcon: Icon(Icons.bedtime_outlined),
-                ),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return '入力してください。';
-                  } else if (!RegExp(r'^[0-2][0-9]:[0-5][0-9]$')
-                      .hasMatch(value)) {
-                    return '正しい時間形式(hh:mm)で入力してください。';
-                  }
-                  return null;
-                },
-              ),
+              CoreSleepFormTextField(controller: coreController),
               const SizedBox(
                 height: 16,
               ),
