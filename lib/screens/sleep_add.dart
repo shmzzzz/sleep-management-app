@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sleep_management_app/widgets/appbar_component_widget.dart';
+import 'package:sleep_management_app/widgets/sleep_hours_form_text_field.dart';
 import 'package:sleep_management_app/widgets/total_sleep_form_text_field.dart';
 
 class SleepAddScreen extends StatefulWidget {
@@ -110,23 +111,8 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
               const SizedBox(
                 height: 16,
               ),
-              TextFormField(
+              SleepHoursFormTextField(
                 controller: _sleepHourController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  label: Text('睡眠時間'),
-                  prefixIcon: Icon(Icons.av_timer),
-                ),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return '入力してください。';
-                  } else if (!RegExp(
-                          r'^[0-2][0-9]:[0-9]{2}-[0-2][0-9]:[0-5][0-9]$')
-                      .hasMatch(value)) {
-                    return '正しい時間形式(hh:mm-hh:mm)で入力してください。';
-                  }
-                  return null;
-                },
                 onChanged: (value) {
                   setState(() {
                     inputSleep = value;
