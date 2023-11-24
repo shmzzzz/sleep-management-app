@@ -3,9 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sleep_management_app/widgets/appbar_component_widget.dart';
-import 'package:sleep_management_app/widgets/core_sleep_form_text_field.dart';
-import 'package:sleep_management_app/widgets/sleep_hours_form_text_field.dart';
-import 'package:sleep_management_app/widgets/total_sleep_form_text_field.dart';
+import 'package:sleep_management_app/widgets/text_form_fields/core_sleep_form_text_field.dart';
+import 'package:sleep_management_app/widgets/text_form_fields/sleep_hours_form_text_field.dart';
+import 'package:sleep_management_app/widgets/text_form_fields/total_sleep_form_text_field.dart';
 
 class SleepAddScreen extends StatefulWidget {
   const SleepAddScreen({super.key});
