@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sleep_management_app/widgets/appbar_component_widget.dart';
 import 'package:sleep_management_app/widgets/text_form_fields/core_sleep_form_text_field.dart';
+import 'package:sleep_management_app/widgets/text_form_fields/goal_sleep_form_text_field.dart';
 import 'package:sleep_management_app/widgets/text_form_fields/sleep_hours_form_text_field.dart';
 import 'package:sleep_management_app/widgets/text_form_fields/total_sleep_form_text_field.dart';
 
@@ -134,22 +135,8 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
               const SizedBox(
                 height: 16,
               ),
-              TextFormField(
+              GoalSleepFormTextField(
                 controller: _goalSleepHourController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  label: Text('目標睡眠時間'),
-                  prefixIcon: Icon(Icons.checklist_outlined),
-                ),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return '入力してください。';
-                  } else if (!RegExp(r'^[0-2][0-9]:[0-5][0-9]$')
-                      .hasMatch(value)) {
-                    return '正しい時間形式(hh:mm)で入力してください。';
-                  }
-                  return null;
-                },
                 onChanged: (value) {
                   setState(() {
                     inputGoal = value;

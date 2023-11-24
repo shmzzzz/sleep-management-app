@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-/// 睡眠時間(合計)のウィジェット
-class CoreSleepFormTextField extends StatelessWidget {
-  const CoreSleepFormTextField({
+/// 目標睡眠時間のウィジェット
+class GoalSleepFormTextField extends StatelessWidget {
+  const GoalSleepFormTextField({
     super.key,
     required this.controller,
     this.onChanged,
@@ -17,8 +17,8 @@ class CoreSleepFormTextField extends StatelessWidget {
       controller: controller,
       decoration: const InputDecoration(
         border: OutlineInputBorder(),
-        label: Text('深い睡眠'),
-        prefixIcon: Icon(Icons.bedtime_outlined),
+        label: Text('目標睡眠時間'),
+        prefixIcon: Icon(Icons.checklist_outlined),
       ),
       validator: (value) {
         if (value == null || value.trim().isEmpty) {

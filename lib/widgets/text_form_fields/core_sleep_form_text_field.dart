@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// 睡眠時間(合計)のウィジェット
+/// 深い睡眠のウィジェット
 class CoreSleepFormTextField extends StatelessWidget {
   const CoreSleepFormTextField({
     super.key,
