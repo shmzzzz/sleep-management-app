@@ -2,7 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sleep_management_app/widgets/logout_button.dart';
+import 'package:sleep_management_app/widgets/appbar_component_widget.dart';
+import 'package:sleep_management_app/widgets/text_form_fields/core_sleep_form_text_field.dart';
+import 'package:sleep_management_app/widgets/text_form_fields/goal_sleep_form_text_field.dart';
+import 'package:sleep_management_app/widgets/text_form_fields/sleep_hours_form_text_field.dart';
+import 'package:sleep_management_app/widgets/text_form_fields/total_sleep_form_text_field.dart';
 
 class SleepAddScreen extends StatefulWidget {
   const SleepAddScreen({super.key});
@@ -23,6 +27,7 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
   String inputSleep = '';
   String inputCore = '';
   String inputGoal = '';
+  late bool isAchieved;
 
   void _showSnackBar(String message) {
     ScaffoldMessenger.of(context).clearSnackBars();
@@ -40,6 +45,12 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
         String userUid = FirebaseAuth.instance.currentUser!.uid;
         // ユーザーごとにデータを保存するパスを構築
         String userPath = 'users/$userUid/data';
+        // DateTimeに変換する
+        DateTime totalDateTime = DateFormat('HH:mm').parse(inputTotal);
+        DateTime goalDateTime = DateFormat('HH:mm').parse(inputGoal);
+        // 目標との比較
+        isAchieved = totalDateTime.isAfter(goalDateTime) ||
+            totalDateTime.isAtSameMomentAs(goalDateTime);
         // FireStoreにデータを保存する
         // ユーザーごとに出し分けたいため、collectionに渡すpathを変更する
         FirebaseFirestore.instance.collection(userPath).add({
@@ -47,16 +58,11 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
           'sleep': inputSleep,
           'core': inputCore,
           'goal': inputGoal,
+          'isAchieved': isAchieved,
           'createdAt': Timestamp.now()
         });
-        // DateTimeに変換する
-        DateTime totalDateTime = DateFormat('HH:mm').parse(inputTotal);
-        DateTime goalDateTime = DateFormat('HH:mm').parse(inputGoal);
-        // 目標との比較
-        bool isAchieved = totalDateTime.isAfter(goalDateTime) ||
-            totalDateTime.isAtSameMomentAs(goalDateTime);
         // 一覧画面への遷移
-        Navigator.of(context).pop(isAchieved);
+        Navigator.of(context).pop();
       } catch (error) {
         _showSnackBar(error.toString());
       }
@@ -82,11 +88,8 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('${FirebaseAuth.instance.currentUser!.email}'),
-        actions: const [
-          LogoutButton(),
-        ],
+      appBar: AppBarComponentWidget(
+        title: FirebaseAuth.instance.currentUser!.email!,
       ),
       body: Form(
         key: _formKey,
@@ -101,22 +104,8 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
               const SizedBox(
                 height: 32,
               ),
-              TextFormField(
+              TotalSleepFormTextField(
                 controller: _totalSleepHourController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  label: Text('睡眠時間(合計)'),
-                  prefixIcon: Icon(Icons.timelapse),
-                ),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return '入力してください。';
-                  } else if (!RegExp(r'^[0-2][0-9]:[0-5][0-9]$')
-                      .hasMatch(value)) {
-                    return '正しい時間形式(hh:mm)で入力してください。';
-                  }
-                  return null;
-                },
                 onChanged: (value) {
                   setState(() {
                     inputTotal = value;
@@ -126,23 +115,8 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
               const SizedBox(
                 height: 16,
               ),
-              TextFormField(
+              SleepHoursFormTextField(
                 controller: _sleepHourController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  label: Text('睡眠時間'),
-                  prefixIcon: Icon(Icons.av_timer),
-                ),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return '入力してください。';
-                  } else if (!RegExp(
-                          r'^[0-2][0-9]:[0-9]{2}-[0-2][0-9]:[0-5][0-9]$')
-                      .hasMatch(value)) {
-                    return '正しい時間形式(hh:mm-hh:mm)で入力してください。';
-                  }
-                  return null;
-                },
                 onChanged: (value) {
                   setState(() {
                     inputSleep = value;
@@ -152,22 +126,8 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
               const SizedBox(
                 height: 16,
               ),
-              TextFormField(
+              CoreSleepFormTextField(
                 controller: _coreSleepHourController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  label: Text('深い睡眠'),
-                  prefixIcon: Icon(Icons.bedtime_outlined),
-                ),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return '入力してください。';
-                  } else if (!RegExp(r'^[0-2][0-9]:[0-5][0-9]$')
-                      .hasMatch(value)) {
-                    return '正しい時間形式(hh:mm)で入力してください。';
-                  }
-                  return null;
-                },
                 onChanged: (value) {
                   setState(() {
                     inputCore = value;
@@ -177,22 +137,8 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
               const SizedBox(
                 height: 16,
               ),
-              TextFormField(
+              GoalSleepFormTextField(
                 controller: _goalSleepHourController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  label: Text('目標睡眠時間'),
-                  prefixIcon: Icon(Icons.checklist_outlined),
-                ),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return '入力してください。';
-                  } else if (!RegExp(r'^[0-2][0-9]:[0-5][0-9]$')
-                      .hasMatch(value)) {
-                    return '正しい時間形式(hh:mm)で入力してください。';
-                  }
-                  return null;
-                },
                 onChanged: (value) {
                   setState(() {
                     inputGoal = value;
