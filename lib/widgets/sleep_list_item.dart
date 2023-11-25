@@ -22,7 +22,7 @@ class SleepListItem extends StatefulWidget {
 class _SleepListItemState extends State<SleepListItem> {
   bool isAchieved = false;
 
-  void updateAchievment() {
+  void setInitialAchievement() {
     DateTime totalDateTime =
         DateFormat('HH:mm').parse(widget.itemData['total']);
     DateTime goalDateTime = DateFormat('HH:mm').parse(widget.itemData['goal']);
@@ -31,6 +31,12 @@ class _SleepListItemState extends State<SleepListItem> {
     setState(() {
       isAchieved = totalDateTime.isAfter(goalDateTime) ||
           totalDateTime.isAtSameMomentAs(goalDateTime);
+    });
+  }
+
+  void updateAchievement(bool updatedAchievement) {
+    setState(() {
+      isAchieved = updatedAchievement;
     });
   }
 
@@ -49,6 +55,7 @@ class _SleepListItemState extends State<SleepListItem> {
       String userUid = FirebaseAuth.instance.currentUser!.uid;
       // ユーザーごとにデータを保存するパスを構築
       String userPath = 'users/$userUid/data';
+      // Firebaseからデータを削除
       await FirebaseFirestore.instance
           .collection(userPath)
           .doc(documentId)
@@ -61,7 +68,7 @@ class _SleepListItemState extends State<SleepListItem> {
   @override
   void initState() {
     super.initState();
-    updateAchievment();
+    setInitialAchievement();
   }
 
   @override
@@ -69,6 +76,7 @@ class _SleepListItemState extends State<SleepListItem> {
     final total = widget.itemData['total'];
     final sleep = widget.itemData['sleep'];
     final core = widget.itemData['core'];
+    final isAchieved = widget.itemData['isAchieved'];
 
     return Card(
       elevation: 5,
@@ -87,7 +95,7 @@ class _SleepListItemState extends State<SleepListItem> {
 
           // データが更新された場合はisAchievedが変わる可能性がある
           if (result != null) {
-            isAchieved = result;
+            updateAchievement(result);
           }
         },
         leading: isAchieved
