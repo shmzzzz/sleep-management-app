@@ -55,6 +55,7 @@ class _SleepListItemState extends State<SleepListItem> {
       String userUid = FirebaseAuth.instance.currentUser!.uid;
       // ユーザーごとにデータを保存するパスを構築
       String userPath = 'users/$userUid/data';
+      // Firebaseからデータを削除
       await FirebaseFirestore.instance
           .collection(userPath)
           .doc(documentId)
@@ -75,6 +76,7 @@ class _SleepListItemState extends State<SleepListItem> {
     final total = widget.itemData['total'];
     final sleep = widget.itemData['sleep'];
     final core = widget.itemData['core'];
+    final isAchieved = widget.itemData['isAchieved'];
 
     return Card(
       elevation: 5,

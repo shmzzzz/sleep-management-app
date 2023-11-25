@@ -65,6 +65,13 @@ class _SleepEditScreenState extends State<SleepEditScreen> {
         String userUid = FirebaseAuth.instance.currentUser!.uid;
         // ユーザーごとにデータを保存するパスを構築
         String userPath = 'users/$userUid/data';
+        // DateTimeに変換する
+        DateTime totalDateTime =
+            DateFormat('HH:mm').parse(totalController.text);
+        DateTime goalDateTime = DateFormat('HH:mm').parse(goalController.text);
+        // 目標との比較
+        bool isAchieved = totalDateTime.isAfter(goalDateTime) ||
+            totalDateTime.isAtSameMomentAs(goalDateTime);
         // FireStoreにデータを保存する
         // ユーザーごとに出し分けたいため、collectionに渡すpathを変更する
         FirebaseFirestore.instance
@@ -77,16 +84,10 @@ class _SleepEditScreenState extends State<SleepEditScreen> {
           'sleep': sleepController.text,
           'core': coreController.text,
           'goal': goalController.text,
+          'isAchieved': isAchieved,
         });
-        // DateTimeに変換する
-        DateTime totalDateTime =
-            DateFormat('HH:mm').parse(totalController.text);
-        DateTime goalDateTime = DateFormat('HH:mm').parse(goalController.text);
-        // 目標との比較
-        bool isAchieved = totalDateTime.isAfter(goalDateTime) ||
-            totalDateTime.isAtSameMomentAs(goalDateTime);
         // 一覧画面への遷移
-        Navigator.of(context).pop(isAchieved);
+        Navigator.of(context).pop();
       } catch (error) {
         _showSnackBar(error.toString());
       }

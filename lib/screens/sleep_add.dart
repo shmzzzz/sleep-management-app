@@ -27,6 +27,7 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
   String inputSleep = '';
   String inputCore = '';
   String inputGoal = '';
+  late bool isAchieved;
 
   void _showSnackBar(String message) {
     ScaffoldMessenger.of(context).clearSnackBars();
@@ -44,6 +45,12 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
         String userUid = FirebaseAuth.instance.currentUser!.uid;
         // ユーザーごとにデータを保存するパスを構築
         String userPath = 'users/$userUid/data';
+        // DateTimeに変換する
+        DateTime totalDateTime = DateFormat('HH:mm').parse(inputTotal);
+        DateTime goalDateTime = DateFormat('HH:mm').parse(inputGoal);
+        // 目標との比較
+        isAchieved = totalDateTime.isAfter(goalDateTime) ||
+            totalDateTime.isAtSameMomentAs(goalDateTime);
         // FireStoreにデータを保存する
         // ユーザーごとに出し分けたいため、collectionに渡すpathを変更する
         FirebaseFirestore.instance.collection(userPath).add({
@@ -51,16 +58,11 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
           'sleep': inputSleep,
           'core': inputCore,
           'goal': inputGoal,
+          'isAchieved': isAchieved,
           'createdAt': Timestamp.now()
         });
-        // DateTimeに変換する
-        DateTime totalDateTime = DateFormat('HH:mm').parse(inputTotal);
-        DateTime goalDateTime = DateFormat('HH:mm').parse(inputGoal);
-        // 目標との比較
-        bool isAchieved = totalDateTime.isAfter(goalDateTime) ||
-            totalDateTime.isAtSameMomentAs(goalDateTime);
         // 一覧画面への遷移
-        Navigator.of(context).pop(isAchieved);
+        Navigator.of(context).pop();
       } catch (error) {
         _showSnackBar(error.toString());
       }
