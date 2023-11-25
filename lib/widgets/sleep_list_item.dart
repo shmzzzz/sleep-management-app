@@ -22,7 +22,7 @@ class SleepListItem extends StatefulWidget {
 class _SleepListItemState extends State<SleepListItem> {
   bool isAchieved = false;
 
-  void updateAchievment() {
+  void updateAchievement() {
     DateTime totalDateTime =
         DateFormat('HH:mm').parse(widget.itemData['total']);
     DateTime goalDateTime = DateFormat('HH:mm').parse(widget.itemData['goal']);
@@ -61,7 +61,7 @@ class _SleepListItemState extends State<SleepListItem> {
   @override
   void initState() {
     super.initState();
-    updateAchievment();
+    updateAchievement();
   }
 
   @override
@@ -87,7 +87,7 @@ class _SleepListItemState extends State<SleepListItem> {
 
           // データが更新された場合はisAchievedが変わる可能性がある
           if (result != null) {
-            isAchieved = result;
+            updateAchievement();
           }
         },
         leading: isAchieved
