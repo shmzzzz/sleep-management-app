@@ -3,7 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sleep_management_app/screens/sleep_add.dart';
-import 'package:sleep_management_app/widgets/logout_button.dart';
+import 'package:sleep_management_app/widgets/appbar_component_widget.dart';
+import 'package:sleep_management_app/widgets/drawer_list.dart';
 import 'package:sleep_management_app/widgets/sleep_list_item.dart';
 
 class SleepListScreen extends StatefulWidget {
@@ -31,13 +32,11 @@ class _SleepListScreenState extends State<SleepListScreen> {
           )
           .snapshots(),
       builder: (context, snapshot) {
+        // 通信中はローディングスピナーを表示する
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Scaffold(
-            appBar: AppBar(
-              title: Text('${FirebaseAuth.instance.currentUser!.email}'),
-              actions: const [
-                LogoutButton(),
-              ],
+            appBar: AppBarComponentWidget(
+              title: FirebaseAuth.instance.currentUser!.email!,
             ),
             body: const Center(
               child: CircularProgressIndicator(),
@@ -57,14 +56,13 @@ class _SleepListScreenState extends State<SleepListScreen> {
           );
         }
 
+        // データがない場合
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
           return Scaffold(
-            appBar: AppBar(
-              title: Text('${FirebaseAuth.instance.currentUser!.email}'),
-              actions: const [
-                LogoutButton(),
-              ],
+            appBar: AppBarComponentWidget(
+              title: FirebaseAuth.instance.currentUser!.email!,
             ),
+            drawer: const DrawerList(),
             body: const Center(
               child: Text('データがありません。'),
             ),
@@ -83,13 +81,11 @@ class _SleepListScreenState extends State<SleepListScreen> {
           );
         }
 
+        // エラーが発生した場合
         if (snapshot.hasError) {
           return Scaffold(
-            appBar: AppBar(
-              title: Text('${FirebaseAuth.instance.currentUser!.email}'),
-              actions: const [
-                LogoutButton(),
-              ],
+            appBar: AppBarComponentWidget(
+              title: FirebaseAuth.instance.currentUser!.email!,
             ),
             body: const Center(
               child: Text('エラーが発生しました。'),
@@ -109,15 +105,14 @@ class _SleepListScreenState extends State<SleepListScreen> {
           );
         }
 
+        // データが存在するので取得する
         final loadedData = snapshot.data!.docs;
 
         return Scaffold(
-          appBar: AppBar(
-            title: Text('${FirebaseAuth.instance.currentUser!.email}'),
-            actions: const [
-              LogoutButton(),
-            ],
+          appBar: AppBarComponentWidget(
+            title: FirebaseAuth.instance.currentUser!.email!,
           ),
+          drawer: const DrawerList(),
           body: ListView.builder(
             itemCount: loadedData.length,
             itemBuilder: (context, index) {
