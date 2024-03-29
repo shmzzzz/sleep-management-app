@@ -36,9 +36,9 @@
 - 追加ボタンタップでデータを登録する
 - クリアボタンタップで入力値をクリアする
 
-画面表示時 | 
---- |
-![add data](readme_files/data_add.png)
+画面表示時
+
+<img width="50%" src="readme_files/data_add.png">
 
 
 - バリデーション
@@ -56,6 +56,6 @@
 - デザインは追加画面と同様
 - タップしたリストアイテムのデータが入力された状態で表示する
 
-画面表示時 |
---- |
-![alt text](readme_files/data_edit.png)
+画面表示時
+
+<img width="50%" src="readme_files/data_edit.png">
