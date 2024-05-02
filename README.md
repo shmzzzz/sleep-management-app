@@ -1,8 +1,13 @@
-# sleep_management_app
+# ■ sleep_management_app
 - 睡眠時間記録アプリ
 
-## 画面仕様
-### ログイン画面
+## ■ 使用技術
+![](https://img.shields.io/badge/firebase_core-v2.21.0-blue)
+![](https://img.shields.io/badge/firebase_auth-v4.12.1-blue)
+![](https://img.shields.io/badge/cloud_firestore-v4.12.2-blue)
+
+## ■ 画面仕様
+### ■ ログイン画面
 - Firebase Authentication で管理
 - ログイン状態のユーザーには表示しない
 - 未ログイン状態のユーザーに表示する
@@ -14,7 +19,7 @@
 ![login](readme_files/login.png) | ![create account](readme_files/create_account.png)
 
 ---
-### 一覧画面
+### ■ 一覧画面
 - メニューバータップで一覧画面と追加画面に遷移する
 - 右下「+」ボタンタップで追加画面に遷移する
 - 右上ログアウトボタンタップでログアウトする
@@ -32,7 +37,7 @@
 ![no data](readme_files/no_data.png) | ![achieved data](readme_files/achieved_data.png) | ![didn't achieve data](readme_files/didnot_achieve_data.png)
 
 ---
-### 追加画面
+### ■ 追加画面
 - 追加ボタンタップでデータを登録する
 - クリアボタンタップで入力値をクリアする
 
@@ -52,7 +57,7 @@
 
 
 ---
-### 編集画面
+### ■ 編集画面
 - デザインは追加画面と同様
 - タップしたリストアイテムのデータが入力された状態で表示する
 
