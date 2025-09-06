@@ -1,12 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:sleep_management_app/widgets/appbar_component_widget.dart';
 import 'package:sleep_management_app/widgets/text_form_fields/core_sleep_form_text_field.dart';
 import 'package:sleep_management_app/widgets/text_form_fields/goal_sleep_form_text_field.dart';
 import 'package:sleep_management_app/widgets/text_form_fields/sleep_hours_form_text_field.dart';
 import 'package:sleep_management_app/widgets/text_form_fields/total_sleep_form_text_field.dart';
+import 'package:sleep_management_app/services/sleep_repository.dart';
+import 'package:sleep_management_app/utils/context_extensions.dart';
+import 'package:sleep_management_app/utils/time_utils.dart';
 
 class SleepAddScreen extends StatefulWidget {
   const SleepAddScreen({super.key});
@@ -29,42 +31,26 @@ class _SleepAddScreenState extends State<SleepAddScreen> {
   String inputGoal = '';
   late bool isAchieved;
 
-  void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-      ),
-    );
-  }
-
   void _submitData() {
     if (_formKey.currentState!.validate()) {
       try {
-        // ユーザーのUIDを取得
-        String userUid = FirebaseAuth.instance.currentUser!.uid;
-        // ユーザーごとにデータを保存するパスを構築
-        String userPath = 'users/$userUid/data';
-        // DateTimeに変換する
-        DateTime totalDateTime = DateFormat('HH:mm').parse(inputTotal);
-        DateTime goalDateTime = DateFormat('HH:mm').parse(inputGoal);
+        final userUid = FirebaseAuth.instance.currentUser!.uid;
         // 目標との比較
-        isAchieved = totalDateTime.isAfter(goalDateTime) ||
-            totalDateTime.isAtSameMomentAs(goalDateTime);
+        isAchieved = isAchievedByHm(inputTotal, inputGoal);
         // FireStoreにデータを保存する
-        // ユーザーごとに出し分けたいため、collectionに渡すpathを変更する
-        FirebaseFirestore.instance.collection(userPath).add({
+        const repo = SleepRepository();
+        repo.add(userUid, {
           'total': inputTotal,
           'sleep': inputSleep,
           'core': inputCore,
           'goal': inputGoal,
           'isAchieved': isAchieved,
-          'createdAt': Timestamp.now()
+          'createdAt': Timestamp.now(),
         });
         // 一覧画面への遷移
         Navigator.of(context).pop();
       } catch (error) {
-        _showSnackBar(error.toString());
+        context.showSnackBar(error.toString());
       }
     }
   }

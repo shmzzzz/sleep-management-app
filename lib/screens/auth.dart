@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:sleep_management_app/utils/firebase_errors.dart';
+import 'package:sleep_management_app/utils/context_extensions.dart';
 
 final _firebase = FirebaseAuth.instance;
 
@@ -46,19 +48,8 @@ class _AuthScreenState extends State<AuthScreen> {
         await _createUserAndLogin();
       }
     } on FirebaseAuthException catch (error) {
-      // エラーハンドリングは以下を参考にすると良いかも
-      // https://qiita.com/edasan/items/ae0c04065c9d12b2e90e
-      if (error.code == 'email-already-in-use') {
-        _showSnackBar('このメールアドレスはすでに使用されています。');
-      } else if (error.code == 'invalid-email') {
-        _showSnackBar('メールアドレスが有効ではありません。');
-      } else if (error.code == 'invalid_login_credentials') {
-        _showSnackBar('メールアドレスまたはパスワードが誤っています。');
-      } else if (error.code == 'too-many-requests') {
-        _showSnackBar('時間をおいてから実行してください。');
-      } else {
-        _showSnackBar(error.message ?? '認証に失敗しました。');
-      }
+      final message = mapFirebaseAuthError(error);
+      context.showSnackBar(message);
       // エラーが発生しているので認証処理は行っていない
       setState(() {
         _isAuthenticating = false;
@@ -88,15 +79,6 @@ class _AuthScreenState extends State<AuthScreen> {
       'username': 'to be done...',
       'email': _enteredEmail,
     });
-  }
-
-  void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-      ),
-    );
   }
 
   @override

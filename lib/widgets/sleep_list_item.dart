@@ -1,9 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:sleep_management_app/screens/sleep_edit.dart';
+import 'package:sleep_management_app/services/sleep_repository.dart';
+import 'package:sleep_management_app/utils/context_extensions.dart';
 
 class SleepListItem extends StatefulWidget {
   const SleepListItem({
@@ -22,53 +22,27 @@ class SleepListItem extends StatefulWidget {
 class _SleepListItemState extends State<SleepListItem> {
   bool isAchieved = false;
 
-  void setInitialAchievement() {
-    DateTime totalDateTime =
-        DateFormat('HH:mm').parse(widget.itemData['total']);
-    DateTime goalDateTime = DateFormat('HH:mm').parse(widget.itemData['goal']);
-    // 目標との比較
-    // アイコンを更新したいのでsetState内で比較する
-    setState(() {
-      isAchieved = totalDateTime.isAfter(goalDateTime) ||
-          totalDateTime.isAtSameMomentAs(goalDateTime);
-    });
-  }
-
   void updateAchievement(bool updatedAchievement) {
     setState(() {
       isAchieved = updatedAchievement;
     });
   }
 
-  void showSnackBar(String message) {
-    ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-      ),
-    );
-  }
-
   void deleteData(String documentId) async {
     try {
-      // ユーザーのUIDを取得
-      String userUid = FirebaseAuth.instance.currentUser!.uid;
-      // ユーザーごとにデータを保存するパスを構築
-      String userPath = 'users/$userUid/data';
-      // Firebaseからデータを削除
-      await FirebaseFirestore.instance
-          .collection(userPath)
-          .doc(documentId)
-          .delete();
+      final userUid = FirebaseAuth.instance.currentUser!.uid;
+      const repo = SleepRepository();
+      await repo.delete(userUid, documentId);
     } catch (error) {
-      showSnackBar(error.toString());
+      context.showSnackBar(error.toString());
     }
   }
 
   @override
   void initState() {
     super.initState();
-    setInitialAchievement();
+    // 初期表示は保存済みの値に合わせる
+    isAchieved = widget.itemData['isAchieved'] == true;
   }
 
   @override
@@ -76,7 +50,7 @@ class _SleepListItemState extends State<SleepListItem> {
     final total = widget.itemData['total'];
     final sleep = widget.itemData['sleep'];
     final core = widget.itemData['core'];
-    final isAchieved = widget.itemData['isAchieved'];
+    // isAchieved は state を使用
 
     return Card(
       elevation: 5,
@@ -93,10 +67,8 @@ class _SleepListItemState extends State<SleepListItem> {
             ),
           );
 
-          // データが更新された場合はisAchievedが変わる可能性がある
-          if (result != null) {
-            updateAchievement(result);
-          }
+          // 更新後に戻ってきた場合、必要ならローカル表示を更新
+          if (result is bool) updateAchievement(result as bool);
         },
         leading: isAchieved
             ? const Icon(Icons.check_circle_outline_outlined)

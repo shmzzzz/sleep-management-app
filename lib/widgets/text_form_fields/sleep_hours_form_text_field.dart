@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sleep_management_app/widgets/text_form_fields/labeled_time_form_field.dart';
 
 /// 睡眠時間のウィジェット
 class SleepHoursFormTextField extends StatelessWidget {
@@ -13,27 +14,12 @@ class SleepHoursFormTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
+    return LabeledTimeFormField(
       controller: controller,
-      decoration: const InputDecoration(
-        border: OutlineInputBorder(),
-        label: Text('睡眠時間'),
-        prefixIcon: Icon(Icons.av_timer),
-      ),
-      validator: (value) {
-        if (value == null || value.trim().isEmpty) {
-          return '入力してください。';
-        } else if (!RegExp(r'^[0-2][0-9]:[0-9]{2}-[0-2][0-9]:[0-5][0-9]$')
-            .hasMatch(value)) {
-          return '正しい時間形式(hh:mm-hh:mm)で入力してください。';
-        }
-        return null;
-      },
-      onChanged: (value) {
-        if (onChanged != null) {
-          onChanged!(value);
-        }
-      },
+      label: '睡眠時間',
+      icon: Icons.av_timer,
+      kind: TimeFieldKind.hmRange,
+      onChanged: onChanged,
     );
   }
 }
