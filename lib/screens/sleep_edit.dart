@@ -1,12 +1,13 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:sleep_management_app/widgets/appbar_component_widget.dart';
 import 'package:sleep_management_app/widgets/text_form_fields/core_sleep_form_text_field.dart';
 import 'package:sleep_management_app/widgets/text_form_fields/goal_sleep_form_text_field.dart';
 import 'package:sleep_management_app/widgets/text_form_fields/sleep_hours_form_text_field.dart';
 import 'package:sleep_management_app/widgets/text_form_fields/total_sleep_form_text_field.dart';
+import 'package:sleep_management_app/services/sleep_repository.dart';
+import 'package:sleep_management_app/utils/context_extensions.dart';
+import 'package:sleep_management_app/utils/time_utils.dart';
 
 class SleepEditScreen extends StatefulWidget {
   const SleepEditScreen({
@@ -49,47 +50,24 @@ class _SleepEditScreenState extends State<SleepEditScreen> {
     super.dispose();
   }
 
-  void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-      ),
-    );
-  }
-
   void _submitData() {
     if (_formKey.currentState!.validate()) {
       try {
-        // ユーザーのUIDを取得
-        String userUid = FirebaseAuth.instance.currentUser!.uid;
-        // ユーザーごとにデータを保存するパスを構築
-        String userPath = 'users/$userUid/data';
-        // DateTimeに変換する
-        DateTime totalDateTime =
-            DateFormat('HH:mm').parse(totalController.text);
-        DateTime goalDateTime = DateFormat('HH:mm').parse(goalController.text);
-        // 目標との比較
-        bool isAchieved = totalDateTime.isAfter(goalDateTime) ||
-            totalDateTime.isAtSameMomentAs(goalDateTime);
-        // FireStoreにデータを保存する
-        // ユーザーごとに出し分けたいため、collectionに渡すpathを変更する
-        FirebaseFirestore.instance
-            .collection(userPath)
-            // documentIdが外側から受け取った変数なので、widgetを経由して取得する
-            .doc(widget.documentId)
-            // 更新なのでupdate
-            .update({
+        final userUid = FirebaseAuth.instance.currentUser!.uid;
+        final achieved =
+            isAchievedByHm(totalController.text, goalController.text);
+        const repo = SleepRepository();
+        repo.update(userUid, widget.documentId, {
           'total': totalController.text,
           'sleep': sleepController.text,
           'core': coreController.text,
           'goal': goalController.text,
-          'isAchieved': isAchieved,
+          'isAchieved': achieved,
         });
-        // 一覧画面への遷移
-        Navigator.of(context).pop();
+        // 一覧画面への遷移（新しい達成状態を返す）
+        Navigator.of(context).pop(achieved);
       } catch (error) {
-        _showSnackBar(error.toString());
+        context.showSnackBar(error.toString());
       }
     }
   }
